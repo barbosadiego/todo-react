@@ -6,21 +6,43 @@ import Tasks from './Components/Tasks';
 function App() {
   const [taskTitle, setTaskTitle] = React.useState('');
   const [taskDuration, setTaskDuration] = React.useState('');
+  const timeStamp = new Date();
+  const todoArray = JSON.parse(localStorage.getItem('@todo-list')) || [];
+
+  function createTask(task) {
+    todoArray.push(task);
+    localStorage.setItem('@todo-list', JSON.stringify(todoArray));
+
+    setTaskTitle('');
+    setTaskDuration('');
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const task_db = {taskTitle, taskDuration};
 
-    localStorage.setItem('@todo-list', JSON.stringify(task_db))
+    const todo = {
+      id: timeStamp.getTime(),
+      taskTitle,
+      taskDuration,
+      done: false,
+    };
 
-    console.log(task_db)
+    createTask(todo);
+  }
+
+  function handleTask(e){
+    if(e.currentTarget.classList.contains('delete')){
+      console.log('delete')
+    } else {
+      console.log('done')
+    }
   }
 
   return (
     <div className="todo-app">
       <h1>React Todo</h1>
-      <p className='description'>Insira a sua próxima tarefa:</p>
-      <form className='form'>
+      <p className="description">Insira a sua próxima tarefa:</p>
+      <form className="form">
         <FormFild
           name="title"
           type="text"
@@ -34,14 +56,23 @@ function App() {
           type="number"
           label="Duração"
           placeholder="Tempo estimado (em horas)"
+          value={taskDuration}
           onChange={(e) => setTaskDuration(e.target.value)}
         />
         <input type="submit" value="Criar tarefa" onClick={handleSubmit} />
       </form>
-        <hr />
+      <hr />
       <div>
         <h2>Lista de Tarefas</h2>
-        <Tasks title='Título da tarefa' text='teste' />
+        {todoArray.length > 0 &&
+          todoArray.map((task) => (
+            <Tasks
+              key={task.id}
+              title={task.taskTitle}
+              text={`duração ${task.taskDuration} hr`}
+              onClick={handleTask}
+            />
+          ))}
       </div>
     </div>
   );

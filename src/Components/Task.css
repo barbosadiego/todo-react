@@ -1,8 +1,10 @@
 h3{
   margin: 1em 0;
+  text-transform: capitalize;
 }
 p{
   margin-bottom: 10px;
+  text-transform: capitalize;
 }
 button{
   cursor: pointer;

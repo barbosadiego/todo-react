@@ -4,10 +4,10 @@ import Tasks from './Components/Tasks';
 import FormFild from './Components/FormFild';
 
 function App() {
-  function getLocalStorage(){
-    let list = JSON.parse(localStorage.getItem('@todo-list'))
-    if(!list) return []
-    return list
+  function getLocalStorage() {
+    let list = JSON.parse(localStorage.getItem('@todo-list'));
+    if (!list) return [];
+    return list;
   }
 
   const [taskTitle, setTaskTitle] = React.useState('');
@@ -21,17 +21,16 @@ function App() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    
+
     if (!taskTitle || !taskDuration) {
       alert('Preencha os campos abaixo');
       return;
     }
-    
-    const taskItem={
+
+    const taskItem = {
       id: new Date().getTime().toString(),
       taskTitle,
       taskDuration,
-      done: false,
     };
 
     setTaskList([...taskList, taskItem]);
@@ -40,16 +39,12 @@ function App() {
   }
 
   function handleTask(e) {
-    if (e.currentTarget.classList.contains('delete')) {
-      deleteTask(e.currentTarget.dataset.id);
-    } else {
-      console.log('done');
-    }
+    deleteTask(e.currentTarget.dataset.id);
   }
 
   function deleteTask(id) {
     const newTasks = JSON.parse(localStorage.getItem('@todo-list'));
-   setTaskList(newTasks.filter((task) => task.id !== id))
+    setTaskList(newTasks.filter((task) => task.id !== id));
     setMsg('Item deletado.');
     alert(msg);
   }
@@ -86,7 +81,7 @@ function App() {
             key={task.id}
             id={task.id}
             title={task.taskTitle}
-            text={`duração ${task.taskDuration} hr`}
+            text={`duração: ${task.taskDuration} hr`}
             onClick={handleTask}
           />
         ))}

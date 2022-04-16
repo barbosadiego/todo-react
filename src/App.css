@@ -21,3 +21,9 @@ h1, h2{
 hr{
   border: 1px solid #25282c;
 }
+@media screen and (max-width:600px) {
+  .todo-app{
+    width: 90%;
+    min-width: unset;
+  }
+}

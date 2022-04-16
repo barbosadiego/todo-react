@@ -1,41 +1,57 @@
 import './App.css';
-import FormFild from './Components/FormFild';
 import React from 'react';
 import Tasks from './Components/Tasks';
+import FormFild from './Components/FormFild';
 
 function App() {
+  function getLocalStorage(){
+    let list = JSON.parse(localStorage.getItem('@todo-list'))
+    if(!list) return []
+    return list
+  }
+
   const [taskTitle, setTaskTitle] = React.useState('');
   const [taskDuration, setTaskDuration] = React.useState('');
-  const timeStamp = new Date();
-  const todoArray = JSON.parse(localStorage.getItem('@todo-list')) || [];
+  const [taskList, setTaskList] = React.useState(getLocalStorage());
+  const [msg, setMsg] = React.useState('');
 
-  function createTask(task) {
-    todoArray.push(task);
-    localStorage.setItem('@todo-list', JSON.stringify(todoArray));
-
-    setTaskTitle('');
-    setTaskDuration('');
-  }
+  React.useEffect(() => {
+    localStorage.setItem('@todo-list', JSON.stringify(taskList));
+  }, [taskList]);
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    const todo = {
-      id: timeStamp.getTime(),
+    
+    if (!taskTitle || !taskDuration) {
+      alert('Preencha os campos abaixo');
+      return;
+    }
+    
+    const taskItem={
+      id: new Date().getTime().toString(),
       taskTitle,
       taskDuration,
       done: false,
     };
 
-    createTask(todo);
+    setTaskList([...taskList, taskItem]);
+    setTaskTitle('');
+    setTaskDuration('');
   }
 
-  function handleTask(e){
-    if(e.currentTarget.classList.contains('delete')){
-      console.log('delete')
+  function handleTask(e) {
+    if (e.currentTarget.classList.contains('delete')) {
+      deleteTask(e.currentTarget.dataset.id);
     } else {
-      console.log('done')
+      console.log('done');
     }
+  }
+
+  function deleteTask(id) {
+    const newTasks = JSON.parse(localStorage.getItem('@todo-list'));
+   setTaskList(newTasks.filter((task) => task.id !== id))
+    setMsg('Item deletado.');
+    alert(msg);
   }
 
   return (
@@ -64,15 +80,16 @@ function App() {
       <hr />
       <div>
         <h2>Lista de Tarefas</h2>
-        {todoArray.length > 0 &&
-          todoArray.map((task) => (
-            <Tasks
-              key={task.id}
-              title={task.taskTitle}
-              text={`duração ${task.taskDuration} hr`}
-              onClick={handleTask}
-            />
-          ))}
+        {taskList.length === 0 && <p>Não há tarefas</p>}
+        {taskList.map((task) => (
+          <Tasks
+            key={task.id}
+            id={task.id}
+            title={task.taskTitle}
+            text={`duração ${task.taskDuration} hr`}
+            onClick={handleTask}
+          />
+        ))}
       </div>
     </div>
   );

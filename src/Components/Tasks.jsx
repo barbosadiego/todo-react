@@ -1,5 +1,5 @@
 import React from 'react';
-import { BsTrash, BsBookmarkCheck, BsBookmarkCheckFill } from 'react-icons/bs';
+import { BsTrash } from 'react-icons/bs';
 import './Task.css';
 
 const Tasks = ({ title, text, onClick, id }) => {
